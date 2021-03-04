@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:mapbox_maps/src/views/config/config.dart';
 
@@ -18,6 +21,25 @@ class _FullSreenMapState extends State<FullSreenMap> {
 
   void _onMapCreated(MapboxMapController controller) {
     mapController = controller;
+    //_onStyleLoaded();
+  }
+
+  void _onStyleLoaded() {
+    addImageFromAsset("assetImage", "assets/images/custom-icon.png");
+    addImageFromUrl("networkImage", Uri.parse("https://via.placeholder.com/50"));
+  }
+
+  /// Adds an asset image to the currently displayed style
+  Future<void> addImageFromAsset(String name, String assetName) async {
+    final ByteData bytes = await rootBundle.load(assetName);
+    final Uint8List list = bytes.buffer.asUint8List();
+    return mapController.addImage(name, list);
+  }
+
+  /// Adds a network image to the currently displayed style
+  Future<void> addImageFromUrl(String name, Uri uri) async {
+    var response = await http.get(uri);
+    return mapController.addImage(name, response.bodyBytes);
   }
 
   @override
@@ -41,8 +63,8 @@ class _FullSreenMapState extends State<FullSreenMap> {
             mapController.addSymbol(SymbolOptions(
               geometry: center,
               textField: 'Park',
-              iconSize: 3,
-              iconImage: 'attraction-15',
+              // iconSize: 3,
+              iconImage: 'networkImage',
               textOffset: Offset(0,2)
             ));
           },
@@ -91,6 +113,7 @@ class _FullSreenMapState extends State<FullSreenMap> {
 
   MapboxMap _createMap() {
     return MapboxMap(
+      onStyleLoadedCallback: _onStyleLoaded,
         styleString: selectedStyle,
         accessToken: accessTokenMapBox,
         onMapCreated: _onMapCreated,
