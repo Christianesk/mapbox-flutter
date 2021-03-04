@@ -8,10 +8,11 @@ class FullSreenMap extends StatefulWidget {
 }
 
 class _FullSreenMapState extends State<FullSreenMap> {
+
   MapboxMapController mapController;
 
   final center = LatLng(-0.369397, -78.455147);
-  String selectedStyle = 'mapbox://styles/rickesk91/ckltzdl3m1h9s17qtczlusv6t';
+  String selectedStyle = 'mapbox://styles/rickesk91/cklu03nqd1eft17qf4798nc78';
   final darkStyle = 'mapbox://styles/rickesk91/ckltzdl3m1h9s17qtczlusv6t';
   final streetStyle = 'mapbox://styles/rickesk91/cklu03nqd1eft17qf4798nc78';
 
@@ -23,23 +24,51 @@ class _FullSreenMapState extends State<FullSreenMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _createMap(),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            child: Icon(Icons.add_to_home_screen),
-            onPressed: () {
-              setState(() {
-                if (selectedStyle == darkStyle) {
-                  selectedStyle = streetStyle;
-                } else {
-                  selectedStyle = darkStyle;
-                }
-              });
-            },
-          )
-        ],
-      ),
+      floatingActionButton: floatButtom(),
+    );
+  }
+
+  Column floatButtom() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+
+        //Zoom In
+
+        FloatingActionButton(
+          child: Icon(Icons.zoom_in),
+          onPressed: () {
+            mapController.animateCamera(CameraUpdate.zoomIn());
+          },
+        ),
+
+        SizedBox(height: 5),
+
+        //Zoom out
+
+        FloatingActionButton(
+          child: Icon(Icons.zoom_out),
+          onPressed: () {
+            mapController.animateCamera(CameraUpdate.zoomOut());
+          },
+        ),
+
+        SizedBox(height: 5),
+
+        //Change Style
+        FloatingActionButton(
+          child: Icon(Icons.add_to_home_screen),
+          onPressed: () {
+            setState(() {
+              if (selectedStyle == darkStyle) {
+                selectedStyle = streetStyle;
+              } else {
+                selectedStyle = darkStyle;
+              }
+            });
+          },
+        )
+      ],
     );
   }
 
