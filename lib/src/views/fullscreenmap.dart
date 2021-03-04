@@ -33,6 +33,23 @@ class _FullSreenMapState extends State<FullSreenMap> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
 
+        //Symbols
+
+        FloatingActionButton(
+          child: Icon(Icons.add_location_alt),
+          onPressed: () {
+            mapController.addSymbol(SymbolOptions(
+              geometry: center,
+              textField: 'Park',
+              iconSize: 3,
+              iconImage: 'attraction-15',
+              textOffset: Offset(0,2)
+            ));
+          },
+        ),
+
+        SizedBox(height: 5),
+
         //Zoom In
 
         FloatingActionButton(
